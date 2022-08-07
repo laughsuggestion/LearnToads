@@ -1,1 +1,11 @@
 This file exists simply as a way to trigger the content build pipeline.
+
+The build requires vcpkg with the following packages:
+eabase:x64-windows-static
+eastl:x64-windows-static
+glfw3:x64-windows-static 
+glm:x64-windows-static
+
+Python 3+ is required to process content.
+
+The working directory should be set to: $(SolutionDir)
