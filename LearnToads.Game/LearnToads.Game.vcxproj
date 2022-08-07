@@ -71,18 +71,18 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Development\vcpkg\installed\x64-windows-static\include;C:\VulkanSDK\1.3.216.0\Include;Public;Content;$(IncludePath)</IncludePath>
+    <IncludePath>$(VcpkgRoot)\installed\x64-windows-static\include;$(VULKAN_SDK)\Include;Public;Content</IncludePath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(SolutionDir)Build\Intermediate</IntDir>
     <CustomBuildAfterTargets>
     </CustomBuildAfterTargets>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
-    <LibraryPath>C:\VulkanSDK\1.3.216.0\Lib;C:\Development\vcpkg\installed\x64-windows-static\debug\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(VULKAN_SDK)\Lib;$(VcpkgRoot)\installed\x64-windows-static\debug\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Development\vcpkg\installed\x64-windows-static\include;C:\VulkanSDK\1.3.216.0\Include;Public;Content;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\VulkanSDK\1.3.216.0\Lib;C:\Development\vcpkg\installed\x64-windows-static\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VcpkgRoot)\installed\x64-windows-static\include;$(VULKAN_SDK)\Include;Public;Content</IncludePath>
+    <LibraryPath>$(VULKAN_SDK)\Lib;$(VcpkgRoot)\installed\x64-windows-static\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(SolutionDir)Build\Intermediate</IntDir>
     <CustomBuildAfterTargets>
@@ -91,18 +91,18 @@
     </CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Development\vcpkg\installed\x64-windows-static\include;C:\VulkanSDK\1.3.216.0\Include;Public;Content;$(IncludePath)</IncludePath>
+    <IncludePath>$(VcpkgRoot)\installed\x64-windows-static\include;$(VULKAN_SDK)\Include;Public;Content</IncludePath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(SolutionDir)Build\Intermediate</IntDir>
     <CustomBuildAfterTargets>
     </CustomBuildAfterTargets>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
-    <LibraryPath>C:\VulkanSDK\1.3.216.0\Lib;C:\Development\vcpkg\installed\x64-windows-static\debug\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(VULKAN_SDK)\Lib;$(VcpkgRoot)\installed\x64-windows-static\debug\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Development\vcpkg\installed\x64-windows-static\include;C:\VulkanSDK\1.3.216.0\Include;Public;Content;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\VulkanSDK\1.3.216.0\Lib;C:\Development\vcpkg\installed\x64-windows-static\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VcpkgRoot)\installed\x64-windows-static\include;$(VULKAN_SDK)\Include;Public;Content</IncludePath>
+    <LibraryPath>$(VULKAN_SDK)\Lib;$(VcpkgRoot)\installed\x64-windows-static\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(SolutionDir)Build\Intermediate</IntDir>
     <CustomBuildAfterTargets>
@@ -121,6 +121,9 @@
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <VcpkgInstalledDir>C:\Development\vcpkg\installed</VcpkgInstalledDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>false</VcpkgEnableManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

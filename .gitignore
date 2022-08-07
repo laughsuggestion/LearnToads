@@ -36,3 +36,5 @@ Build/
 *.user
 
 *.filters
+
+*.vs/**
