@@ -4,14 +4,18 @@
 #include "LTGameWindow.h"
 #include "LTAsset.h"
 #include "LTVKDevice.h"
+#include "LTVKPipeline.h"
 
 int main()
 {
+    printf("sizeof(LTAssetState): %zu,\n", sizeof(LTAssetState));
+    printf("sizeof(std::atomic<LTAssetState>): %zu,\n", sizeof(std::atomic<LTAssetState>));
+
     LTGameWindow gameWindow;
     gameWindow.Initialize();
 
     LTVKDevice graphicsDevice(gameWindow);
-    
+
     if (!graphicsDevice.Initialize())
     {
         return 0;
@@ -20,8 +24,21 @@ int main()
     LTAssetManager& assetManager = LTAssetManager::GetInstance();
     assetManager.Initialize(&graphicsDevice);
 
-    LTShader* simpleVertShaderAsset = Content::VertexShaders::GetSimple();
-    LTShader* simpleFragShaderAsset = Content::FragmentShaders::GetSimple();
+    LTAssetHandle simpleVertShaderAsset = Content::VertexShaders::GetSimple();
+    LTAssetHandle simpleFragShaderAsset = Content::FragmentShaders::GetSimple();
+
+    LTVKPipeline pipeline(
+        &graphicsDevice,
+        (LTShader*)simpleVertShaderAsset.GetAsset(),
+        (LTShader*)simpleFragShaderAsset.GetAsset());
+
+    LTVKPipelineConfig config;
+    pipeline.GetDefaultPipelineConfig(
+        config,
+        gameWindow.GetWidth(),
+        gameWindow.GetHeight());
+
+    pipeline.Initialize(config);
 
     //if (GetMouseDown(left))
     //{

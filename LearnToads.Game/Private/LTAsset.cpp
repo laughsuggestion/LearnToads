@@ -33,16 +33,16 @@ void LTAssetManager::ContentThread()
         }
 
         printf("asset: %s, type: %d \n",
-            next->m_Asset->GetFileName().c_str(),
-            next->m_JobType);
+            next->assetHandle.GetAsset()->GetFileName().c_str(),
+            next->jobType);
 
-        switch (next->m_JobType)
+        switch (next->jobType)
         {
             case LTAssetJobType::LT_ASSET_JOB_TYPE_LOAD:
             {
                 // an asset could have been finished loading right as the 
                 // load job was being queued; so we reject those jobs here
-                if (next->m_Asset->GetAssetState() == LTAssetState::LT_ASSET_STATE_LOADED)
+                if (next->assetHandle.GetAsset()->GetAssetState() == LTAssetState::LT_ASSET_STATE_LOADED)
                 {
                     continue;
                 }
@@ -59,7 +59,7 @@ bool LTAssetManager::LoadAsset_Shader(
     uint8_t* fileBuffer,
     size_t fileSize)
 {
-    LTShader* shaderAsset = (LTShader*)assetJob.m_Asset;
+    LTShader* shaderAsset = (LTShader*)assetJob.assetHandle.GetAsset();
 
     // Vulkan shader creation info
     VkShaderModuleCreateInfo createInfo = {};
@@ -76,11 +76,11 @@ bool LTAssetManager::LoadAsset_Shader(
         nullptr,
         &shaderAsset->GetShaderModule()) != VK_SUCCESS)
     {
-        assetJob.m_Result = LTAssetJobResult::LT_ASSET_JOB_RESULT_FAILURE;
+        assetJob.result = LTAssetJobResult::LT_ASSET_JOB_RESULT_FAILURE;
         return false;
     }
 
-    assetJob.m_Result = LTAssetJobResult::LT_ASSET_JOB_RESULT_SUCCESS;
+    assetJob.result = LTAssetJobResult::LT_ASSET_JOB_RESULT_SUCCESS;
     return true;
 }
 
@@ -89,7 +89,7 @@ bool LTAssetManager::LoadAsset_ByType(
     uint8_t* fileBuffer,
     size_t fileSize)
 {
-    switch (assetJob.m_Asset->GetAssetType())
+    switch (assetJob.assetHandle.GetAsset()->GetAssetType())
     {
         case LTAssetType::LT_ASSET_TYPE_SHADER:
         {
@@ -97,7 +97,7 @@ bool LTAssetManager::LoadAsset_ByType(
         }
     }
 
-    assetJob.m_Result = LTAssetJobResult::LT_ASSET_JOB_RESULT_FAILURE;
+    assetJob.result = LTAssetJobResult::LT_ASSET_JOB_RESULT_FAILURE;
     return false;
 }
 
@@ -109,12 +109,12 @@ bool LTAssetManager::LoadAsset(LTAssetJob& assetJob)
     size_t fileSize;
 
     if (!LoadAsset_File(
-        assetJob.m_Asset->GetFileName(),
+        assetJob.assetHandle.GetAsset()->GetFileName(),
         file,
         fileBuffer,
         fileSize))
     {
-        assetJob.m_Result = LTAssetJobResult::LT_ASSET_JOB_RESULT_FAILURE;
+        assetJob.result = LTAssetJobResult::LT_ASSET_JOB_RESULT_FAILURE;
         return false;
     }
 
@@ -132,7 +132,7 @@ bool LTAssetManager::LoadAsset(LTAssetJob& assetJob)
 
     if (success)
     {
-        assetJob.m_Asset->SetAssetState(LTAssetState::LT_ASSET_STATE_LOADED);
+        assetJob.assetHandle.GetAsset()->SetAssetState(LTAssetState::LT_ASSET_STATE_LOADED);
     }
 
     return success;
@@ -233,17 +233,17 @@ void LTAssetManager::InitializeContentLookup()
             {
                 case LTAssetType::LT_ASSET_TYPE_SHADER:
                 {
-                    new(asset) LTShader(assetID, assetType, assetPath);
+                    new(asset) LTShader(assetID, assetPath);
                 }
                 break;
                 case LTAssetType::LT_ASSET_TYPE_TEXTURE:
                 {
-
+                    new(asset) LTTexture(assetID, assetPath);
                 }
                 break;
                 case LTAssetType::LT_ASSET_TYPE_MODEL:
                 {
-
+                    new(asset) LTModel(assetID, assetPath);
                 }
                 break;
                 case LTAssetType::LT_ASSET_TYPE_UNKNOWN: break;
@@ -255,19 +255,21 @@ void LTAssetManager::InitializeContentLookup()
     }
 }
 
-bool LTAssetManager::Get(LTAssetID assetID, LTAsset*& outAsset)
+bool LTAssetManager::Get(LTAssetID assetID, LTAssetHandle& outAssetHandle)
 {
     assert(assetID >= 0 && assetID < m_Assets.size());
 
-    outAsset = m_Assets[assetID];
+    LTAsset* asset = m_Assets[assetID];
 
-    return outAsset->GetAssetState() == LTAssetState::LT_ASSET_STATE_LOADED;
+    outAssetHandle = asset;
+
+    return asset->GetAssetState() == LTAssetState::LT_ASSET_STATE_LOADED;
 }
 
-bool LTAssetManager::Load(LTAsset& asset)
+bool LTAssetManager::Load(LTAssetHandle& assetHandle)
 {
     // if the asset has already been loaded, early out
-    if (asset.GetAssetState() == LTAssetState::LT_ASSET_STATE_LOADED)
+    if (assetHandle.GetAsset()->GetAssetState() == LTAssetState::LT_ASSET_STATE_LOADED)
     {
         return true;
     }
@@ -276,14 +278,14 @@ bool LTAssetManager::Load(LTAsset& asset)
     std::scoped_lock lock(m_AssetMutex);
 
     // queue up load asset job
-    m_AssetJobs.push(LTAssetJob(&asset, LTAssetJobType::LT_ASSET_JOB_TYPE_LOAD));
+    m_AssetJobs.push(LTAssetJob(assetHandle, LTAssetJobType::LT_ASSET_JOB_TYPE_LOAD));
 
     return true;
 }
 
-bool LTAssetManager::GetLoad(LTAssetID assetID, LTAsset*& outAsset)
+bool LTAssetManager::GetLoad(LTAssetID assetID, LTAssetHandle& outAssetHandle)
 {
-    return Get(assetID, outAsset) || Load(*outAsset);
+    return Get(assetID, outAssetHandle) || Load(outAssetHandle);
 }
 
 VkShaderModule& LTShader::GetShaderModule()

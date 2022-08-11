@@ -297,6 +297,7 @@
   <ItemGroup>
     <ClCompile Include="Content\LTContent.cpp" />
     <ClCompile Include="Integrations\LTEASTL.cpp" />
+    <ClCompile Include="Private\LTVKPipeline.cpp" />
     <ClCompile Include="Private\LTVKDevice.cpp" />
     <ClCompile Include="Private\LTAsset.cpp" />
     <ClCompile Include="Private\LTGameWindow.cpp" />
@@ -310,6 +311,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Content\LTContent.h" />
+    <ClInclude Include="Public\LTVKPipeline.h" />
     <ClInclude Include="Public\LTVKDevice.h" />
     <ClInclude Include="Public\LTAsset.h" />
     <ClInclude Include="Public\LTGameWindow.h" />

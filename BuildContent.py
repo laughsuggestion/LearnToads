@@ -151,16 +151,16 @@ namespace Content {
         content_header += f"class {k} {{\n"
         content_header += f"private: \n"                
         
-        for element in v:
-            content_header += f"    static {element[4]}* m_{element[1]}; \n"
+        # for element in v:
+        #     content_header += f"    static LTAssetHandle m_{element[1]}; \n"
 
         content_header += "public: \n"
 
         for element in v:
             content_header += f"""
     static inline uint32_t Get{element[1]}ID();
-    static {element[4]}* Get{element[1]}();
-    static {element[4]}* Get{element[1]}NoLoad();
+    static LTAssetHandle Get{element[1]}();
+    static LTAssetHandle Get{element[1]}NoLoad();
 """        
 
         content_header += f"}}; // class {k} \n\n"
@@ -178,31 +178,24 @@ namespace Content {
     for k, v in content_map.items():
         for element in v:
             content_cpp += f"""
-{element[4]}* Content::{k}::m_{element[1]}(nullptr);
 
 uint32_t Content::{k}::Get{element[1]}ID()
 {{
     return {element[3]};
 }}
 
-{element[4]}* Content::{k}::Get{element[1]}NoLoad()
+LTAssetHandle Content::{k}::Get{element[1]}NoLoad()
 {{
-    if (!m_{element[1]})
-    {{
-        LTAssetManager::GetInstance().Get(/* asset id = */ {element[3]}, (LTAsset*&)m_{element[1]});
-    }}
-
-    return m_{element[1]};
+    LTAssetHandle assetHandle;
+    LTAssetManager::GetInstance().Get(/* asset id = */ {element[3]}, assetHandle);
+    return assetHandle;
 }}
 
-{element[4]}* Content::{k}::Get{element[1]}()
+LTAssetHandle Content::{k}::Get{element[1]}()
 {{
-    if (!m_{element[1]})
-    {{
-        LTAssetManager::GetInstance().GetLoad(/* asset id = */ {element[3]}, (LTAsset*&)m_{element[1]});
-    }}
-
-    return m_{element[1]};
+    LTAssetHandle assetHandle;
+    LTAssetManager::GetInstance().GetLoad(/* asset id = */ {element[3]}, assetHandle);
+    return assetHandle;
 }}
 """        
     # write out the content header

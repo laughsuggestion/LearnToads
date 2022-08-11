@@ -4,83 +4,62 @@
 #include "LTContent.h"
 #include "LTAsset.h"
 
-LTModel* Content::Models::m_Cube(nullptr);
 
 uint32_t Content::Models::GetCubeID()
 {
     return 0;
 }
 
-LTModel* Content::Models::GetCubeNoLoad()
+LTAssetHandle Content::Models::GetCubeNoLoad()
 {
-    if (!m_Cube)
-    {
-        LTAssetManager::GetInstance().Get(/* asset id = */ 0, (LTAsset*&)m_Cube);
-    }
-
-    return m_Cube;
+    LTAssetHandle assetHandle;
+    LTAssetManager::GetInstance().Get(/* asset id = */ 0, assetHandle);
+    return assetHandle;
 }
 
-LTModel* Content::Models::GetCube()
+LTAssetHandle Content::Models::GetCube()
 {
-    if (!m_Cube)
-    {
-        LTAssetManager::GetInstance().GetLoad(/* asset id = */ 0, (LTAsset*&)m_Cube);
-    }
-
-    return m_Cube;
+    LTAssetHandle assetHandle;
+    LTAssetManager::GetInstance().GetLoad(/* asset id = */ 0, assetHandle);
+    return assetHandle;
 }
 
-LTShader* Content::FragmentShaders::m_Simple(nullptr);
 
 uint32_t Content::FragmentShaders::GetSimpleID()
 {
     return 1;
 }
 
-LTShader* Content::FragmentShaders::GetSimpleNoLoad()
+LTAssetHandle Content::FragmentShaders::GetSimpleNoLoad()
 {
-    if (!m_Simple)
-    {
-        LTAssetManager::GetInstance().Get(/* asset id = */ 1, (LTAsset*&)m_Simple);
-    }
-
-    return m_Simple;
+    LTAssetHandle assetHandle;
+    LTAssetManager::GetInstance().Get(/* asset id = */ 1, assetHandle);
+    return assetHandle;
 }
 
-LTShader* Content::FragmentShaders::GetSimple()
+LTAssetHandle Content::FragmentShaders::GetSimple()
 {
-    if (!m_Simple)
-    {
-        LTAssetManager::GetInstance().GetLoad(/* asset id = */ 1, (LTAsset*&)m_Simple);
-    }
-
-    return m_Simple;
+    LTAssetHandle assetHandle;
+    LTAssetManager::GetInstance().GetLoad(/* asset id = */ 1, assetHandle);
+    return assetHandle;
 }
 
-LTShader* Content::VertexShaders::m_Simple(nullptr);
 
 uint32_t Content::VertexShaders::GetSimpleID()
 {
     return 2;
 }
 
-LTShader* Content::VertexShaders::GetSimpleNoLoad()
+LTAssetHandle Content::VertexShaders::GetSimpleNoLoad()
 {
-    if (!m_Simple)
-    {
-        LTAssetManager::GetInstance().Get(/* asset id = */ 2, (LTAsset*&)m_Simple);
-    }
-
-    return m_Simple;
+    LTAssetHandle assetHandle;
+    LTAssetManager::GetInstance().Get(/* asset id = */ 2, assetHandle);
+    return assetHandle;
 }
 
-LTShader* Content::VertexShaders::GetSimple()
+LTAssetHandle Content::VertexShaders::GetSimple()
 {
-    if (!m_Simple)
-    {
-        LTAssetManager::GetInstance().GetLoad(/* asset id = */ 2, (LTAsset*&)m_Simple);
-    }
-
-    return m_Simple;
+    LTAssetHandle assetHandle;
+    LTAssetManager::GetInstance().GetLoad(/* asset id = */ 2, assetHandle);
+    return assetHandle;
 }
